@@ -6,8 +6,8 @@
   <title>Setters und Getters in der pseudoklassischen OOP</title>
   <script>
     function Person(n, a){
-      // this.name = n;
-      Object.defineProperty(this, 'name', {value: n, writeable: false});
+      this.name = n;
+      // Object.defineProperty(this, 'name', { enumberable: false, configurable: false, value: n, writeable: false} );
       this.alter = a;
 
       // die Accessoren zu 'adresse' (getter/setter) werden den

@@ -14,12 +14,53 @@
 
         function Quiz(){
           this.fragen = [];
+          this.indexFrage = 0;
+
+          // Eine Möglichkeit den this-Kontext des Objekts in Callback-Funktionen zu erhalten.
+          // Der Gültigkeitbereich der Variable ergibt sich, anders als jener von this,
+          // lexikalisch, also aus der Struktur des Codes
+          // const _this = this;
 
           this.addFragen = function(...frageListe){
-            // console.log(frageListe);
+            //console.log(frageListe);
             this.fragen = this.fragen.concat(frageListe);
-          }
-        }
+          };
+
+          this.zeigeFrage = function(){
+            const frageObj = this.fragen[ this.indexFrage ];
+
+            $('#q').text( frageObj.frage );
+            $('#quiz_ui button')
+              .each( function(index /*, DOMElement*/){
+                // console.log(this);
+                $(this).text( frageObj.antworten[index] );
+
+                // Lösung über die jQuery data-Methode (weist DOM-Elementen zusätzliche Daten zu)
+                $(this).data('indexAntwort', index);
+
+                // Lösung über ein Argument der jQuery on-Methode (und Auslesen über die data-Eigenschaft des Event-Objekts)
+                // $(this).on('click', index, function(e){
+                //   console.log(e.data);
+                // });
+              })
+              // this für das Quiz-Objekt wird als Argument der jQuery on-Methode mitgegeben
+              // (und über die data-Eigenschaft des Event-Objekts ausgelesen)
+              .on('click', this, function(e){
+                let quizObj = e.data;
+                // console.log(this);
+                // console.log(quizObj);
+                quizObj.pruefeAntwort( $(this).data('indexAntwort') );
+              });
+              // }.bind(this) ); // die function-Methode bind(obj) liefert eine Kopie der Funktion mit geänderten this-Kontext (obj)
+          }; // Ende zeigeFrage
+
+          this.pruefeAntwort = function(indexAntwort){
+            const frageObj = this.fragen[this.indexFrage];
+            const richtig = (frageObj.indexAntwort === indexAntwort);
+
+            console.log(richtig);
+          };
+        } // Ende Quiz
 
         function Frage(frage, antworten, indexRichtigeAntwort){
           this.frage = frage;
@@ -33,7 +74,6 @@
           new Frage( 'Was ist eine gute Frage?', ['Jede Frage', 'Diese Frage', 'Gar keine', 'Keine Ahnung'], 1 ),
           new Frage( 'Wie lange geht\'s noch?', ['1 Minute', '2 Minuten', '3 Minuten', 'Bis morgen'], 0 )
         );
-
 
 
         toastr.options = {
@@ -61,6 +101,7 @@
 
             // Fake Ladeprozess Client <-> Sever
             setTimeout(function(){
+              quiz.zeigeFrage();
               $('#lade_screen, #quiz_ui').toggle();
             }, 2000);
           } else {

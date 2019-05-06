@@ -10,3 +10,4 @@ function globaleFunktion(){
 
   return lokaleFunktion(auchEinLangerName);
 }
+

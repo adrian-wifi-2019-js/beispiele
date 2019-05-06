@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <title>Drag & Drop API</title>
+  <script>
+
+    'use strict';
+
+    window.onload = function() {
+      let elements = document.querySelectorAll('.flex_element');
+
+      for(let i = 0; i < elements.length; i++){
+        let e = elements[i];
+        e.ondragstart = dragHandler;
+        e.id = 'dragElement' + i;
+        e.draggable = true;
+        e.style.backgroundColor = 'rgb(220, ' + (255 - i * 40) + ',' + i * 40 + ')';
+        // e.innerHTML = '<div class="flex_content"><span class="element_id">dragElement' + i + '</span><div>Position: <span class="position_index">' + i + '/0</span></div></div>';
+        e.innerHTML = '<div class="flex_content"><span class="element_id">dragElement' + i + '</span><div>Position: <span class="position_index"></span></div></div>';
+      }
+      updateIndeces();
+
+      elements = document.querySelectorAll('.flex_kasten');
+
+      for(let i = 0; i < elements.length; i++){
+        let e = elements[i];
+        e.ondragover = allowDrop;
+        e.ondrop = dropHandler;
+      }
+
+    }
+
+    function dragHandler(e) {
+      // e.dataTransfer.clearData();
+      e.dataTransfer.setData("text", this.id);
+      e.dataTransfer.setData("hasID", true);
+      console.log('start drag');
+    }
+
+    function allowDrop(e) {
+      if(!e.dataTransfer.getData("hasID"))
+        return;
+
+      e.preventDefault();
+      console.log('allow drop');
+      // console.log(e.dataTransfer.getData("hasID"));
+    }
+
+    function dropHandler(e) {
+      e.preventDefault();
+      // console.log(e.dataTransfer);
+
+      var data = e.dataTransfer.getData("text");
+
+      let dragElement = document.getElementById(data);
+      let dropElement = e.target;
+      // console.log('text: ' + data);
+
+
+      if(this === dropElement)
+        this.appendChild( dragElement );
+      // else if(dropElement.classList.contains('flex_element'))
+      //   this.insertBefore( dragElement, dropElement );
+      else
+        // this.insertBefore( dragElement, dropElement.parentElement);
+        this.insertBefore( dragElement, getElementOrAncestorByClass(dropElement, 'flex_element') );
+
+
+      console.log('dropped, target: ' + dropElement);
+
+      // let arrChildren = Array.from(this.children); // ECMA 6
+      // let arrChildren = Object.assign([], this.children); // Mixin
+      // console.log(arrChildren.indexOf( dragElement ));
+
+      // dragElement.querySelector('.position_index').innerText = arrChildren.indexOf( dragElement );
+
+      updateIndeces();
+    }
+
+    function updateIndeces(){
+      let arrParents = Object.assign([], document.querySelectorAll('.flex_kasten'));
+
+      arrParents.forEach(function(val, i){
+        let arrChildren = Object.assign([], arrParents[i].children);
+
+        arrChildren.forEach(function(val, j){
+          console.log(j + ': ' + val);
+          arrChildren[j].querySelector('.position_index').innerText = arrChildren.indexOf( arrChildren[j] ) + '/' + i;
+        });
+      });
+
+    }
+
+    function getElementOrAncestorByClass(elem, className){
+      while ( !elem.classList.contains(className) ) {
+        elem = elem.parentElement;
+
+        if(elem.tagName === 'body')
+          return null;
+      }
+
+      return elem;
+    }
+
+    // function insertAfter(newNode, referenceNode) {
+    //     referenceNode.parentNode.insertBefore(newNode, referenceNode.nextSibling);
+    // }
+
+  </script>
+  <style media="screen">
+
+    body {
+      font-family: sans-serif;
+    }
+
+    .flex_kasten{
+      display: flex;
+      border: 1px solid;
+      width: 220px;
+      height: 800px;
+      flex-direction: column;
+      float: left;
+      margin-left: 10px;
+    }
+
+    .flex_element {
+      height: 100px;
+      /* border: 1px solid; */
+      background-clip: content-box;
+      padding: .5em;
+    }
+
+    .flex_content{
+      padding: .4em;
+      border: 1px solid;
+      height: calc(100% - 1em);
+    }
+
+    .element_id {
+      font-weight: bold;
+    }
+  </style>
+</head>
+
+<body>
+  <h1>Drag & Drop API</h1>
+
+  <div id="dropElement2" class="flex_kasten">
+    <div class="flex_element"></div>
+    <div class="flex_element"></div>
+    <div class="flex_element"></div>
+    <div class="flex_element"></div>
+    <div class="flex_element"></div>
+    <div class="flex_element"></div>
+  </div>
+
+  <div id="dropElement1" class="flex_kasten">
+  </div>
+</body>
+
+</html>

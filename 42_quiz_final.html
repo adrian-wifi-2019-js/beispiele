@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <title>OOP Quiz</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css">
+  <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
+
+  <script>
+    $(function() {
+
+      let nickName;
+
+      function Quiz() {
+        this.fragen = [];
+        this.indexFrage = -1;
+        this.punkte = 0;
+
+        this.addFragen = function(...frageListe) {
+          this.fragen = this.fragen.concat(frageListe);
+        };
+
+        this.zeigeFrage = function() {
+
+          if(this.fragen.length > this.indexFrage + 1){
+            this.indexFrage ++;
+          } else {
+            this.spielEnde();
+            return;
+          }
+
+          const frageObj = this.fragen[this.indexFrage];
+
+          $('#q').text(frageObj.frage);
+          $('#quiz_ui button')
+            .removeClass('answerTrue answerFalse')
+            .each(function(index /*, DOMElement*/ ) {
+              $(this).text(frageObj.antworten[index]);
+              $(this).data('indexAntwort', index);
+            })
+            .on('click', this, function(e) {
+              let quizObj = e.data;
+              $('#quiz_ui button').off('click');
+
+              quizObj.pruefeAntwort( $(this).data('indexAntwort'), $(this) );
+            });
+        }; // Ende zeigeFrage
+
+        this.pruefeAntwort = function(indexAntwort, btnGeklickt) {
+          const frageObj = this.fragen[this.indexFrage];
+          const richtig = (frageObj.indexAntwort === indexAntwort);
+
+          btnGeklickt.addClass( richtig ? 'answerTrue' : 'answerFalse' );
+
+          if(richtig)
+            this.punkte++;
+
+          richtig ? toastr.success('Bravo!', 'Richtige Antwort') : toastr.warning('Leider nein :(', 'Falsche Antwort');
+
+          setTimeout( this.zeigeFrage.bind(this), 2000 );
+        }; // Ende pruefeAntwort
+
+        this.spielEnde = function(){
+          $('#quiz_ui, #end_screen').toggle();
+          $('#end_screen div').text('Gratuliere, geschafft! Ihre Punkte: ' + this.punkte)
+        }
+      } // Ende Quiz
+
+      function Frage(frage, antworten, indexRichtigeAntwort) {
+        this.frage = frage;
+        this.antworten = antworten;
+        this.indexAntwort = indexRichtigeAntwort;
+      }
+
+      const quiz = new Quiz();
+
+      quiz.addFragen(
+        new Frage('Was ist eine gute Frage?', ['Jede Frage', 'Diese Frage', 'Gar keine', 'Keine Ahnung'], 1),
+        new Frage('Wie lange geht\'s noch?', ['1 Minute', '2 Minuten', '3 Minuten', 'Bis morgen'], 0)
+      );
+
+
+      toastr.options = {
+        "closeButton": true,
+        "debug": false,
+        "newestOnTop": false,
+        "progressBar": true,
+        "positionClass": "toast-top-right",
+        "preventDuplicates": false,
+        "onclick": null,
+        "showDuration": "300",
+        "hideDuration": "1000",
+        "timeOut": "5000",
+        "extendedTimeOut": "1000",
+        "showEasing": "swing",
+        "hideEasing": "linear",
+        "showMethod": "fadeIn",
+        "hideMethod": "fadeOut"
+      }
+
+      $('#btnName').click(function() {
+        if ($('#userName').val().length > 2) {
+          nickName = $('#userName').val();
+          $('#start_screen, #lade_screen').toggle();
+
+          // Fake Ladeprozess Client <-> Sever
+          setTimeout(function() {
+            quiz.zeigeFrage();
+            $('#lade_screen, #quiz_ui').toggle();
+          }, 2000);
+        } else {
+          // alert('Geben Sie bitte einen Nickname mit mindestens 3 Buchstaben an.');
+          toastr.error("Geben Sie bitte einen Nickname mit mindestens 3 Buchstaben an.", "Prüfen Sie Ihre Eingabe")
+          $('#userName').focus();
+        }
+      });
+
+    });
+  </script>
+
+  <style media="screen">
+    * {
+      /* font-size: 1.25rem; */
+      margin: 0;
+      padding: 0;
+      font-family: sans-serif;
+    }
+
+    section,
+    input,
+    button {
+      font: 24px Arial;
+      color: #fff;
+    }
+
+    #start_screen,
+    #lade_screen,
+    #end_screen,
+    #quiz_ui {
+      background: rgba(0, 0, 0, 0.6);
+      width: 70%;
+    }
+
+    #lade_screen,
+    #quiz_ui,
+    #end_screen {
+      display: none;
+    }
+
+    section>div {
+      text-align: center;
+      padding: 1em;
+    }
+
+    input {
+      color: #000;
+    }
+
+    #quiz_ui button {
+      margin: 10px;
+      border-radius: 7px;
+      border: 1px solid #fff;
+      background: transparent;
+      color: #fff;
+      cursor: pointer;
+      padding: 5px 20px;
+      width: 40%;
+    }
+
+    /* button:hover, */
+    #quiz_ui button.clicked {
+      background: rgba(255, 255, 255, 0.35);
+    }
+
+    #quiz_ui button.answerTrue {
+      background: rgba(0, 255, 0, 0.35);
+    }
+
+    #quiz_ui button.answerFalse {
+      background: rgba(255, 0, 0, 0.35);
+    }
+
+    #q {
+      margin: 0 auto;
+    }
+  </style>
+</head>
+
+<body>
+
+  <section id="start_screen">
+    <input type="text" id="userName" placeholder="Ihr Nickname">
+    <button type="button" id="btnName">Weiter</button>
+  </section>
+
+  <section id="lade_screen">
+    Lade Daten...
+  </section>
+
+  <section id="quiz_ui">
+    <div>
+      <h1 id="q"></h1>
+      <button></button>
+      <button></button><br>
+      <button></button>
+      <button></button><br>
+      <!-- <progress value="100" max="100"></progress> -->
+    </div>
+  </section>
+
+  <section id="end_screen">
+    <div></div>
+  </section>
+
+</body>
+
+</html>
