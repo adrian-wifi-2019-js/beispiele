@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>jQuery Ajax Intro</title>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <script>
+    const serverUrl = 'https://wifiwien.000webhostapp.com/x.php';
+
+    $(function() { // document ready callback
+      const ausgabe = $('#ergebnis');
+
+      $('#eingabe').on('change', function() {
+        if ($(this).val().trim() === '')
+          return;
+
+        try {
+          $.ajax({
+            url: serverUrl,
+            type: 'POST',
+            // contentType: 'application/x-www-form-urlencoded', // ist der default in jQuery ajax()
+            data: {
+              x: $(this).val(),
+              y: 'unnötiger Wert'
+            },
+            dataType: 'json',
+            success: function(antwort) {
+              console.log(antwort);
+              if (antwort.fehler) {
+                ausgabe.text('Server-Fehlermeldung: ' + antwort.fehler);
+              } else if (antwort.x2) {
+                ausgabe.text(antwort.x2);
+              } else {
+                ausgabe.text('Unbekannter Fehler, Daten: ' + JSON.stringify(antwort));
+              }
+            },
+            error: function(xhr, httpStatus, httpError) { // HTTP Errors
+              ausgabe.text('Fehler, HTTP-Status: ' + xhr.status + ', ' + xhr.statusText);
+              ausgabe.text(ausgabe.text() + ', jQuery-Status und Error: ' + httpStatus + ', ' + httpError);
+            }
+          });
+        } catch(error) {
+          // Ein Error-Objekt hat eine 'name'- und eine 'message'-Eigenschaft
+          ausgabe.text(error.name + ': ' + error.message)
+        }
+      });
+    });
+  </script>
+</head>
+
+<body>
+  <label for="eingabe">Zahl hoch 2:</label>
+  <input type="text" id="eingabe" value=""> = <span id="ergebnis"></span>
+</body>
+
+</html>

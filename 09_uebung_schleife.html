@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Übung</title>
+  <script>
+    var i = 55;
+
+    window.onload = function() {
+      var zellen = document.getElementsByTagName('td');
+      var zelle;
+      var zeilenFarbe;
+
+
+      for (var i = 0; i < zellen.length; i++) {
+        zelle = zellen[i];
+        zelle.innerText = 'Index : ' + i;
+
+        // Lösung 1:
+        zelle.style.backgroundColor = ( Math.floor(i/3) % 2 === 0) ? 'lightyellow' : 'lightblue';
+        // console.log('Math.floor(i/3): ' + Math.floor(i/3));
+
+        // Lösung 1:
+        // if(i % 3 === 1){
+        //   zelle.style.opacity = 0.66;
+        // } else if ( i % 3 === 2) {
+        //   zelle.style.opacity = 0.33;
+        // }
+
+        // Lösung 2:
+        zelle.style.opacity = 1 - 0.33 * (i % 3);
+
+
+        // // Lösung 2:
+        // if (i % 3 === 0) { // neue Zeile
+        //   if(zeilenFarbe === 'lightyellow') {
+        //     zeilenFarbe = 'lightblue';
+        //   } else /* if(zeilenFarbe === 'lightblue') */ {
+        //     zeilenFarbe = 'lightyellow';
+        //   }
+        //   // zeilenFarbe = (zeilenFarbe === 'lightyellow') ? 'lightblue' : 'lightyellow';
+        // }
+
+        // zelle.style.backgroundColor = zeilenFarbe;
+      }
+    }
+
+  </script>
+
+  <style media="screen">
+    * {
+      font-family: sans-serif;
+    }
+    h1 {
+      margin: 1rem;
+    }
+    table {
+      width: 80%;
+      margin: 1rem;
+      border: 1px solid;
+    }
+  </style>
+
+</head>
+
+<body>
+  <h1>Färbe die Tabellenzeilen abwechselnd ein</h1>
+  <table>
+    <tr>
+      <td></td>
+      <td></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td></td>
+      <td></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td></td>
+      <td></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td></td>
+      <td></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td></td>
+      <td></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td></td>
+      <td></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td></td>
+      <td></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td></td>
+      <td></td>
+      <td></td>
+    </tr>
+  </table>
+</body>
+
+</html>

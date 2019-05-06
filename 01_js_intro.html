@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Javascript Einführung</title>
+  <script>
+
+    // Datentyp 'string' (Text)
+    var userName = 'Susi Sowieso';
+    var textAusgabe = 'Hallo ' + userName;
+    // alert( textAusgabe );
+    console.log( 'textAusgabe: ' + textAusgabe );
+
+    // Datentyp 'number'
+    var x = 12;
+    var y = 20;
+    console.log( 'x + y = ' + (x + y) );
+
+    console.log(5 + 10);
+    console.log(5 + '+' + 10 + '=' + (x + y));
+
+    // Datentyp 'boolean'
+    // var zeigeAnrede = true;
+    var zeigeAnrede = 1;
+
+    // Datentyp 'null' (ein Leerwert)
+    var unbekannt = null;
+
+  </script>
+  <style media="screen">
+    h1 {
+      color: darkred;
+      font-family: sans-serif;
+      font-size: 1.25rem;
+    }
+  </style>
+</head>
+<body>
+  <h1 id="ueberschrift"></h1>
+
+  <script>
+    // das body-Element wurde an dieser Stelle bereits initialisiert.
+
+    var headerElement = document.getElementById('ueberschrift');
+
+    // if(headerElement !== null){
+
+      // '===' vergleicht zwei Werte typgenau,
+      // '==' lässt eine automatische Typkonersion zu
+      if(zeigeAnrede === true) {
+        // window stellt als root-Element im BOM die sogenannte 'globale Ebene' dar-
+        // die explizite Anführung von 'window' kann auch weggelassen werden.
+        // window.document.body.innerText = textAusgabe;
+
+        // document.body.innerText = textAusgabe;
+        // document.getElementById('ueberschrift').innerText = textAusgabe;
+        headerElement.innerText = textAusgabe;
+      } else {
+        headerElement.innerText = 'Herzlich willkommen!';
+      }
+  // }
+
+  </script>
+</body>
+</html>

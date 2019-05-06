@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Das Wetter</title>
+  <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+  <script>
+    $(function(){
+      const ajaxBaseURL = 'http://api.openweathermap.org/data/2.5/weather';
+      const iconBaseURL = 'http://openweathermap.org/img/w/';
+      const appId = '26078130da4d36107c8f4395722b093b';
+
+      const staedte = [
+        { plz: '1010', iconX: '246', iconY: '34' },
+        { plz: '3100', iconX: '210', iconY: '38' },
+        { plz: '4020', iconX: '170', iconY: '32' },
+        { plz: '5020', iconX: '132', iconY: '60' },
+        { plz: '6020', iconX: '70', iconY: '85' },
+        { plz: '6900', iconX: '14', iconY: '72' },
+        { plz: '7100', iconX: '254', iconY: '54' },
+        { plz: '8010', iconX: '220', iconY: '96' },
+        { plz: '9020', iconX: '178', iconY: '120' }
+      ];
+
+      let ladeIndex = 0;
+
+      function ladeWeiter(){
+        if(ladeIndex < staedte.length) {
+          ladeStadt( staedte[ladeIndex] );
+          ladeIndex ++;
+        }
+      }
+
+      function ladeStadt( stadtObj ){
+        $.ajax({
+          url: ajaxBaseURL,
+          method: 'GET',
+          data: {
+            zip: stadtObj.plz + ',at',
+            appid: appId,
+            mode: 'xml',
+            units: 'metric',
+            lang: 'de'
+          },
+          // dataType: 'xml', // nicht notwendig, da aus der Antwort-Kopfzeile 'ContentType' heraus ersichtlich
+          success: function(xmlDaten){
+            // console.log(xmlDaten);
+            // console.log( $('weather', xmlDaten).attr('icon') );
+            const iconURL = iconBaseURL + $('weather', xmlDaten).attr('icon') + '.png';
+            console.log(iconURL);
+
+            let detailInfo = 'Aktuell: ' + $('temperature', xmlDaten).attr('value') + '°';
+            detailInfo += ', Luftfeuchtigkeit: ' + $('humidity', xmlDaten).attr('value') + '%';
+            detailInfo += ', ' + $('weather', xmlDaten).attr('value');
+
+
+            $('<img>')
+              	.attr('src', iconURL)
+              	.attr('title', detailInfo)
+                .addClass('icon')
+                .css( { left: stadtObj.iconX + 'px', top: stadtObj.iconY + 'px'} )
+                .appendTo( $('div.karte') )
+                .fadeIn();
+
+            ladeWeiter(); // nächste Stadt wird geladen...
+          },
+          error: function(xhr, status, error){
+            console.error(error);
+          }
+
+        });
+      } // Ende ladeStadt
+
+      ladeWeiter(); // initialer Aufruf des Ladevorgangs
+
+    }); // Ende ready
+  </script>
+  <style media="screen">
+    .karte {
+      position: relative;
+    }
+    .icon {
+      position: absolute;
+      display: none;
+    }
+    /* .details{
+      position: absolute;
+      display: none;
+      background-color: rgba(200, 200, 0, 0.5);
+      border: 1px solid;
+      padding: .5em;
+      z-index: 20;
+    } */
+    /* img[alt] {
+      position: absolute;
+    } */
+
+  </style>
+</head>
+<body>
+  <h1>Das Wetter</h1>
+  <div class="karte">
+    <img src="images/karte_kl.jpg" alt="Wetterkarte">
+    <!-- <div class="details"></div> -->
+  </div>
+</body>
+</html>

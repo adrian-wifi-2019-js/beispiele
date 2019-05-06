@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Formular Test</title>
+  <script>
+    // Das 'DOMContentLoaded'-Event wird bereits direkt nach Einlesen des HTML DOMs
+    // aufgerufen und nicht erst nach dem Laden aller Bilder und anderer Mediendaten
+    document.addEventListener('DOMContentLoaded', function(ereignis){
+
+      // ** Zugriffsmöglichkeiten auf Forms via JS: ** //
+
+      // Zugriff über die 'forms'-Eigenschaft von document
+      // console.log( document.forms );
+      // console.log( document.forms[0] );
+      // console.log( document.forms.namedItem('meinFormular') );
+
+      // Zugriff via name-Attribut des Forms als Eigenschaft von document
+      // console.log( document.meinFormular );
+
+      // Zugriff auf Form-Elemente via name-Attribut
+      // console.log( document.meinFormular.zahl );
+
+
+      document.meinFormular.onsubmit = function( ereignis ){
+
+        // console.log('Form wird nicht versendet -> preventDefault()');
+        ereignis.preventDefault();
+
+        // jede Ereignisprozedur (Funktion zu EventListeners und Event Handler) bekommt
+        // bei Aufruf ein Event-Objekt als Argument übergeben.
+        // Das Event-Objekt (ereignis-Objekt) beinhaltet Informationen zu jeweils aufgetretenen Ereignis,
+        // sowie auch entsprechende Methoden wie 'preventDefault()' bei 'submit'.
+
+        // console.log( ereignis );
+
+        // die 'currentTarget'-Eigenschaft des Event-Objekts liefert
+        // jenes Objekt, dass über die Ereignisprozedur beobachtet wurde (also das Form)
+
+        // console.log( ereignis.currentTarget );
+
+        // console.log(document.meinFormular.zahl.value);
+        var eingabe = document.meinFormular.zahl.value;
+        eingabe = eingabe.replace(',', '.');
+
+        // console.log( 'Hallo Welt!'.replace('l', 'x') );
+
+        // replace(/suchString/g, 'ersatzString') ersetzt ALLE Vorkommnise des suchStrings:
+        // console.log( 'Hallo Welt!'.replace(/l/g, 'x') );
+
+        // eingabe = eingabe.replace(' ', '');
+
+        // ALLE Leerzeichen werden gelöscht bzw. durch einen leeren String ersetzt
+        eingabe = eingabe.replace(/ /g, '');
+
+        // Konversion des Strings in den Datentyp 'number'
+        // eingabe = eingabe * 1; // so..
+        // eingabe *= 1; // ...oder so in verkürzter Schreibweise
+
+        // parseFloat() und parseInt() parst Zeichen für Zeichen eines Strings
+        // auf Konvertierbarkeit in einen Zahlenwert und stoppt beim ersten Zeichen,
+        // das nicht konvertierbar ist
+        // console.log( 'parseInt("123a567"): ' + parseInt('123a567') );
+        // eingabe = parseFloat(eingabe);
+
+
+        // isFinite() testet auf gültigen Zahlenwert,
+        // d.h. keine NaN und keine unendliche Zahl (Zahl ist also im JS-Zahlenraum)
+        if( ( eingabe !== '' ) && ( isFinite(eingabe) ) ){
+          document.meinFormular.zahl.className = '';
+          // document.meinFormular.submit(); // Validierung OK, also submit
+        } else {
+          document.meinFormular.zahl.className = 'fehler';
+          document.meinFormular.zahl.focus();
+        }
+
+        console.log('eingabe: ' + eingabe);
+      }
+
+    });
+  </script>
+  <style media="screen">
+    * {
+      font-family: sans-serif;
+      font-size: 1.25rem;
+    }
+    .fehler {
+      background: red;
+    }
+    input{
+      padding: .5em;
+    }
+  </style>
+</head>
+<body>
+  <h1>Formular</h1>
+  <form name="meinFormular" action="?" method="post">
+      <label for="feldZahl">Zahl:</label>
+      <input type="text" name="zahl" id="feldZahl" placeholder="Geben Sie bitte eine Zahl an"><br>
+      <input type="submit" value="Senden">
+  </form>
+</body>
+</html>

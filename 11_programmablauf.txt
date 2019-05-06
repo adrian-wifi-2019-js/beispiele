@@ -1,0 +1,7 @@
+Aufgabe: Primzahlen von 2-100 ermitteln:
+- Start- und Endwert festlegen
+- Überprüfe alle Zahlen von Start- bis Endwert
+  - (, ob sie durch keine andere Zahl als 1 und sich selbst teilbar sind)
+  - daher: ...auf alle Zahlen größer 1 und kleiner der überprüften Zahl, ob teilbar
+    - wenn teilbar -> keine Primzahl -> Abbruch der Überprüfung und weiter mit der nächsten Zahl
+    - wenn nach Überprüfung aller Zahlen -> nicht teilbar -> Ausgabe Konsole

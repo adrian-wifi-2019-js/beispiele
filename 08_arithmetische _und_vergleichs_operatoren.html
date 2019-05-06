@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Arithmetische und Vergleichs-Operatoren</title>
+  <script>
+      // Arithmetische Operatoren: + - / * %
+      // Es gelten die Regeln der Grundrechnunhgsarten (Division und Multiplikation vor Addtion und Substraktion)
+      var foo = 1 + 2 * 3 - 10 / 5;
+      //console.log('foo: ' + foo);
+
+      // Auch das Setzten von Klammern entspricht den allgemeinen Rechenregeln
+      var foo2 = (1 + 2) * (3 - 10) / 5;
+      //console.log('foo2: ' + foo2);
+
+      // Die Modulo-Operation gibt den Restwert einer Division auf eine Ganzzahl zurück
+      var foo3 = 23 % 5;
+      //console.log('foo3: ' + foo3);
+
+      var foo4 = 1;
+
+      // Die folgenden drei Zeilen führen dasselbe aus
+      foo4 = foo4 + 1;
+      foo4 += 1;
+      foo4 ++; // Inkrement (erhöht einen Wert um 1)
+
+      window.onload = function() {
+        var zellen = document.getElementsByTagName('td');
+
+        console.log( zellen );
+        console.log( 'Anzahl der Einträge von "zellen": ' + zellen.length );
+        console.log( 'Text der ersten TD: ' + zellen[0].innerText );
+
+        var zelle;
+
+        for( var i = 0; i < zellen.length; i++ ) {
+          // console.log('i: ' + i);
+          zelle = zellen[i];
+          zelle.innerText = 'Index : ' + i;
+
+          // if(i % 3 === 0) {
+          //  zelle.style.backgroundColor = 'lightyellow';
+          // } else if(i % 3 === 1) {
+          //  zelle.style.backgroundColor = 'lightgreen';
+          // } else { //if(i % 3 === 2)
+          //  zelle.style.backgroundColor = 'lightblue';
+          // }
+
+          // Tenäre Bedingung, eine Kurzform, falls nur zwei Möglichkeiten gegeben sind
+          zelle.style.backgroundColor = (i % 2 === 0) ? 'lightyellow' : 'lightblue';
+        }
+      }
+
+  </script>
+
+  <style media="screen">
+    table {
+      width: 80%;
+      margin: 1em;
+      border: 1px solid;
+    }
+  </style>
+
+</head>
+<body>
+      <table>
+        <tr><td>0</td></tr>
+        <tr><td>1</td></tr>
+        <tr><td>2</td></tr>
+        <tr><td>3</td></tr>
+        <tr><td>4</td></tr>
+        <tr><td>5</td></tr>
+        <tr><td>6</td></tr>
+        <tr><td>7</td></tr>
+        <tr><td>8</td></tr>
+        <tr><td>9</td></tr>
+        <tr><td>10</td></tr>
+      </table>
+</body>
+</html>

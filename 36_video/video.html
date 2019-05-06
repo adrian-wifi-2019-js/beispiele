@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0;" />
+  <link rel="stylesheet" media="screen" href="./Beispiel:SELFHTML-Beispiel-Grundlayout.css" />
+  <title>Video</title>
+  <script>
+    window.onload = function(){
+
+      const vid = document.getElementById('player');
+
+      document.getElementById('play').onclick = function(){ vid.play(); };
+      document.getElementById('play_10').onclick = function(){
+        vid.currentTime = 10.0; // Playback-Head-Position in Sekunden
+        vid.play();
+      };
+      document.getElementById('pause').onclick = function(){ vid.pause(); };
+
+      document.getElementById('duration').onclick = function(){
+        document.getElementById('ausgabe').innerText = 'Die Dauer des Videos beträgt ' + vid.duration.toFixed(2) + ' Sekunden.';
+      };
+
+      // console.log(vid.src);
+      // console.log(vid.getAttribute('src'));
+
+      const links = document.querySelectorAll('a.linkVideo');
+
+      for(let i = 0; i < links.length; i++){
+        links[i].onclick = function(e){
+          e.preventDefault();
+          // vid.src = 'vid/' + this.getAttribute('data-vid') + '.mp4';
+
+          // die dataset-Eigenschaft liefert ein Objekt mit allen dem DOM-Element zugewiesenen 'data-*'-Attributen
+          vid.src = 'vid/' + this.dataset.vid + '.mp4';
+        }
+      }
+    }
+
+
+  </script>
+  <style>
+    body{
+      font-family: sans-serif;
+      padding: .5em;
+    }
+    button {
+      margin-top: 0.5em;
+      padding: .5em;
+    }
+    video {
+      margin: 0 auto;
+      width: 100%;
+      max-width: 1024px;
+    }
+  </style>
+</head>
+
+<body>
+  <h1>Video</h1>
+
+  <main>
+    <h2>Video in HTML5</h2>
+	  <video id="player" src="vid/vid01.mp4" controls>
+      Ihr Browser unterstützt kein Video - Sorry!
+    </video>
+    <div>
+      <button id="play">Play</button>
+      <button id="play_10">Spiele ab Sekunde 10</button>
+      <button id="pause">Pause</button>
+      <button id="duration">Länge anzeigen</button>
+      <p id="ausgabe"></p>
+    </div>
+    <div>
+      <a href="#" data-vid="vid01" class="linkVideo">Video 1</a>
+      <a href="#" data-vid="vid02" class="linkVideo">Video 2</a>
+    </div>
+  </main>
+
+</body>
+</html>

@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Primzahlen generieren</title>
+  <script>
+
+    var i = prompt('Geben Sie bitte eine Zahl an.');
+
+    for(var j = 2; j < i; j++){
+      if(i % j === 0){
+        console.log( i + ' ist keine Primzahl, da teilbar durch ' + j );
+        break;
+      }
+
+      if(j === i - 1){ // letzter Schleifendurchlauf und kein break ausgeführt
+        console.log(i + ' ist eine Primzahl!');
+      }
+    }
+
+  </script>
+</head>
+<body>
+
+</body>
+</html>

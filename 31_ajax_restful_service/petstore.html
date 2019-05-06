@@ -1,0 +1,226 @@
+<!doctype html>
+<html>
+<head>
+	<title>Haustiere via REST API</title>
+	<meta charset="utf-8">
+	<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+	<script>
+
+		const basisUrl = 'https://petstore.swagger.io/v2/pet';
+		const categoryName = 'secret_category';
+
+		$( function(){
+			ladeAlle();
+		} );
+
+		function buttonKlick(_this){
+			// console.log(_this);
+			const btn = $(_this);
+			let url = basisUrl;
+			let methode = 'POST';
+			let data = {};
+			let contentType = 'application/json';
+			let dataType = 'json';
+			let callback;
+
+			if( btn.hasClass('btn_new') ){
+					callback = ladeAlle;
+
+					let id = $('#petId').val();
+
+					if( isNaN(id) ){ // Eingabe NICHT in number konvertierbar
+						$('#petId')
+							.addClass('error')
+							.focus();
+						return;
+					} else {
+						$('#petId').removeClass('error');
+					}
+
+					data = JSON.stringify( {
+					  id: id * 1,
+					  category: {
+					    id: 0,
+					    name: categoryName
+					  },
+					  name: $('#petName').val(),
+					  photoUrls: [
+					    $('#petBild').val()
+					  ],
+					  status: 'available'
+					} );
+			} else if ( btn.hasClass('btn_detail') ){
+				url += '/' + btn.attr('data-id');
+				// url += '/' + btn[0].dataset.id;  // Zugriff auf selbst definierte Attribute via Plain JS
+				methode = 'GET';
+				callback = zeigeDetails;
+				contentType = ''; // unterdrückt ein OPTIONS Preflight HTTP Request
+				// contentType = 'text/plain'; // siehe: https://api.jquery.com/jquery.ajax/#jQuery-ajax-url-settings -> contentType
+			} else if( btn.hasClass('btn_change') ) {
+				callback = ladeAlle;
+
+				url += '/' + btn.attr('data-id');
+				// contentType = 'application/x-www-form-urlencoded';
+
+				// Bei Zuweisung eines leeren Strings komm der Default-contentType 'application/x-www-form-urlencoded'
+				// der ajax-Methode zur Anwendung
+				contentType = '';
+				data = {
+					name: $('#petNameDetail').val(),
+					status: 'available'
+				};
+
+				dataType = 'text';
+			} else if ( btn.hasClass('btn_close') ){
+				zeigeSeite(1);
+				return;
+			}
+
+			serverAnfrage(url, methode, data, contentType, dataType, callback);
+		}
+
+		function ladeAlle(){
+			serverAnfrage(basisUrl + '/findByStatus?status=available', 'GET', {}, '', 'json', zeigeAlle);
+		}
+
+		function serverAnfrage(url, methode, data, contentType, dataType, callback){
+			console.log('Anfrage:');
+			console.log(data);
+
+			$.ajax({
+				url: url,
+				type: methode,
+				data: data, // Daten, die an den Server geschickt werden
+				contentType: contentType, // Typ der Daten an den Server (Request)
+				dataType: dataType, // Typ der Daten vom Server an den Client (Response)
+				success: function(antwort){
+					callback(antwort);
+				},
+				error: function(xhr, status, error){
+					console.error('HTTP Fehler: ' + error);
+				}
+			});
+		}
+
+		function zeigeAlle(tierListe){
+			let html = '';
+
+			$.each(tierListe, function(i, tier){
+				if(tier.category && tier.category.name === categoryName){
+					html += '<tr><td>' + tier.id + '</td><td>' + tier.name + '</td>';
+					html += '<td><button class="btn btn_detail" onclick="buttonKlick(this)" data-id="' + tier.id + '">Details</button></td></tr>';
+				}
+			});
+
+			if(html === '')
+				html = 'Keine Tiere gefunden';
+			else
+				html = '<table class="tierliste"><tr><th>ID</th><th>Name</th><th>Zeigen</th></tr>' + html + '</table>';
+
+			$('#ergebnis').html(html);
+
+			zeigeSeite(1);
+		}
+
+		function zeigeDetails(tier){
+			console.log(tier);
+
+			$('#petIdDetail').val(tier.id);
+			$('#petNameDetail').val(tier.name);
+
+			if( tier.photoUrls && tier.photoUrls[0] ){
+				$('#portrait')
+					.attr('src', tier.photoUrls[0])
+					.show();
+			} else {
+				$('#portrait').hide();
+			}
+
+			$('button.btn_change').attr('data-id', tier.id);
+
+			zeigeSeite(2);
+		}
+
+		// seitenNum: 1 ist Listenansicht, 2 ist Detailansicht
+		function zeigeSeite(seitenNum){
+			if(seitenNum ===  1){
+				$('.details').fadeOut( function(){
+					$('#ergebnis').fadeIn();
+				} );
+			} else if (seitenNum === 2){
+				$('#ergebnis').fadeOut( function(){
+					$('.details').fadeIn();
+				} );
+			} else {
+				throw new Error('zeigeSeite: ungültiger Parameter seitenNum = ' + seitenNum);
+			}
+		}
+
+	</script>
+	<style>
+	* {
+		font-size:1.2rem;
+		font-family: sans-serif;
+		padding: .2em;
+	}
+	.error {
+		border: 1px solid darkred;
+	}
+	.inhaltsblock {
+		margin-top: 1em;
+		padding: 0.5em;
+		border: 1px solid;
+	}
+	.tierliste{
+		padding: .5em;
+		border: 1px solid;
+		background-color: white;
+	}
+	.details{
+		background-color: cadetblue;
+	}
+	.topnavi{
+		background-color: bisque;
+	}
+	.ausgeblendet{
+		display:none;
+	}
+	.ergebnis{
+		background-color: khaki;
+	}
+	td {
+		padding: 0.5em;
+	}
+	input, button {
+		padding: 0.3em;
+		margin: 0.3em;
+  	border-radius: 0.2em;
+	}
+	</style>
+</head>
+<body>
+	<!-- <h1>Haustiere via RESTful Service</h1> -->
+	<div class="inhaltsblock topnavi">
+		<input type="text" id="petId" value="" placeholder="ID" required>
+		<input type="text" id="petName" value="" placeholder="Name" required>
+		<input type="text" id="petBild" value="" placeholder="Bild-URL">
+		<button class="btn btn_new" onclick="buttonKlick(this);">Neues Haustier</button>
+		<!-- <input type="text" id="eingabe" placeholder="ID des Haustiers">
+		<button class="btn btn_get">Abfragen</button>
+		<button class="btn btn_delete">Löschen</button> -->
+	</div>
+
+	<div id="ergebnis" class="ausgeblendet inhaltsblock ergebnis"></div>
+
+	<!-- <br><br>
+	<button class="btn btn_all" onclick="buttonKlick(this)">Zeige Haustiere</button> -->
+
+	<div class="details ausgeblendet inhaltsblock">
+		<img id="portrait" src="#" alt="Tierbild" class="ausgeblendet"><br>
+		<input type="text" id="petIdDetail" readonly disabled><br>
+		<input type="text" id="petNameDetail">
+		<button class="btn btn_change" onclick="buttonKlick(this)" data-id="">Ändern</button>
+		<button class="btn btn_close" onclick="buttonKlick(this)">Schließen</button>
+	</div>
+</body>
+</html>

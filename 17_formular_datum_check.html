@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Datum</title>
+  <script>
+    document.addEventListener('DOMContentLoaded', function(){
+
+      document.meinFormular.onsubmit = function(e){
+
+        e.preventDefault();
+        // var fehler = false;
+        var datum;
+
+        // Vorgegebenes Format: TT.MM.JJJJ
+        var datumStr  = document.meinFormular.datum.value;
+        var teile     = datumStr.split('.');
+
+        console.log(teile);
+
+        if(teile.length !== 3){
+          // fehler = true;
+          alert('Geben Sie ein korrektes Datum an!');
+        } else /* if(teile.length === 3) */ {
+          // teile[0] => TAG
+          // teile[1] => MONAT
+          // teile[2] => JAHR
+
+          datum = new Date(teile[2], teile[1] - 1, teile[0]);
+          console.log( datum.toLocaleString() );
+
+          // Validierung der Benutzereingabe
+          if( teile[0] == datum.getDate() &&
+              teile[1] == datum.getMonth() + 1 &&
+              teile[2] == datum.getFullYear()
+            ){
+              // Datum ist VALIDE!
+              alert('Bravo! Sie haben ein korrektes Datum angeben!');
+          } else {
+            // fehler = true
+            alert('Geben Sie ein korrektes Datum an!');
+          }
+        }
+
+      };
+    });
+  </script>
+</head>
+<body>
+  <h1>Formular</h1>
+  <form name="meinFormular" action="?" method="post">
+      <label for="feldDatum">Geben Sie bitte ihr Geburtsdatum an:</label>
+      <input type="text" name="datum" id="feldDatum" placeholder="TT.MM.JJJJ"><br>
+      <input type="submit" value="Senden">
+  </form>
+</body>
+</html>

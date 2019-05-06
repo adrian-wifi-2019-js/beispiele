@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Datentypen und Variablen</title>
+  <script>
+
+    var zahl   = 33.3;
+    var text   = 'Bla bla';
+    var jaNein = true;
+    var liste  = [1, 2, 3];
+    var tuWas  = function(){ alert('Ich mach ja schon!'); };
+    var nix    = null;
+    var garnix; // Nicht initialisierte Variabllen bekommen den Datentyp 'undefined' zugewiesen
+
+    console.log('Datentyp von var zahl: ' + typeof zahl);
+    console.log('Datentyp von var text: ' + typeof text);
+    console.log('Datentyp von var jaNein: ' + typeof jaNein);
+    console.log('Datentyp von var liste: ' + typeof liste);
+    console.log('Datentyp von var tuWas: ' + typeof tuWas);
+    console.log('Datentyp von var nix: ' + typeof nix);  // Achtung: null liefert bei typeof den Wert 'object'
+    console.log('Datentyp von var garnix: ' + typeof garnix);  // Nicht initialisierte Variablen liefern bei typeof 'undefined'
+    console.log('Datentyp von var garnix: ' + typeof gibtsGarNicht);  // Nicht deklarierte(!) Variablen liefern bei typeof gleichfalls 'undefined'
+
+    if(nix === null)
+      console.log('nix ist null');
+
+    if(garnix === undefined)
+      console.log('garnix ist garnix');
+
+    // if (gibtsGarNicht === undefined) // dieser Wert ist nirgendwo deklariert
+    //   console.log('Führt zu einem Fehler');
+
+    // so geht's...
+    if(typeof gibtsGarNicht === undefined); // dieser Wert ist nirgendwo deklariert
+      console.log('gibtsGarNicht ist undefined');
+
+
+  </script>
+</head>
+<body>
+
+</body>
+</html>

@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <script>
+    window.onload = function(){
+
+      const xhr = new XMLHttpRequest();
+      const ausgabe = document.getElementById('ergebnis');
+
+      document.getElementById('eingabe').onchange = function(){
+        if(this.value.trim() === '')
+          return;
+
+        // if(isNaN(this.value)){ // nicht in Zahlenwert konvertierbar
+        //   ausgabe.innerText = 'Kein gültiger Zahlenwert!';
+        //   return;
+        // }
+
+        xhr.open('POST', 'https://wifiwien.000webhostapp.com/x.php');
+        xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+        xhr.send( 'x=' + this.value + '&y=unötiger Wert');
+      } // Ende onclick
+
+
+      xhr.onreadystatechange = function(ereignis){
+        // console.log(xhr.readyState);
+        if(xhr.readyState === 4){ // http Response ist abgeschlossen
+          if(xhr.status >= 200 && xhr.status < 300){ // http Respond hat status 'OK'
+            // console.log(xhr.responseText);
+
+            try {
+              // gibtsnicht.gibtsgarnicht();
+              var daten = JSON.parse(xhr.responseText); // JSON wird in ein JS-Objekt verwandelt
+            } catch (fehler){
+              // Ein Error-Objekt hat eine 'name'- und eine 'message'-Eigenschaft
+              ausgabe.innerText = fehler.name + ': ' + fehler.message;
+              return;
+            }
+
+            if(daten.fehler){
+              ausgabe.innerText = 'Server-Fehlermeldung: ' + daten.fehler;
+            } else if(daten.x2 != undefined){
+              // console.log(daten.x2);
+              ausgabe.innerText = daten.x2;
+            } else {
+              // Unbekannter Fehler
+              ausgabe.innerText = 'Unbekannter Fehler, Daten: ' + xhr.responseText;
+            }
+          } else { // http Error ist aufgetreten
+            ausgabe.innerText = 'Fehler, HTTP-Status: ' + xhr.status + ', ' + xhr.statusText;
+          }
+        }
+      }
+
+
+    }; // Ende window.onload
+  </script>
+</head>
+<body>
+  <label for="eingabe">Zahl hoch 2:</label>
+  <input type="text" id="eingabe" value=""> = <span id="ergebnis"></span>
+</body>
+</html>

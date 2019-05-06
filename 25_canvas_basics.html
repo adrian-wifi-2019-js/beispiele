@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Canvas Basics</title>
+  <script>
+
+    // helpers
+
+    function gradZuRadiant(grad){
+      return grad * Math.PI / 180;
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+
+      const c = document.getElementById('meinCanvas');
+      const ctx = c.getContext('2d');
+
+      const numImgTotal = 2;
+      let numImgLoaded = 0;
+
+      const img = new Image();
+      img.onload = imgGeladen;
+      img.src = 'https://magento.consalnet.pl/media/catalog/product/1/0/10332VE_1.jpg';
+
+      const img2 = new Image();
+      img2.onload = imgGeladen;
+      img2.src = 'images/plane.png';
+
+      function imgGeladen(){
+        numImgLoaded ++;
+        if(numImgLoaded === numImgTotal){
+          zeichneCanvas();
+        }
+      }
+
+      function zeichneCanvas(){
+          console.log(img);
+          let ratioWidthHeight = img.height / img.width;
+          ctx.drawImage(img, 0, 0, c.width, c.width * ratioWidthHeight);
+
+          ctx.shadowBlur = 10;
+          ctx.shadowColor = 'rgba(0,0,0,0.7)';
+          ctx.shadowOffsetX = -40;
+          ctx.shadowOffsetY = 40;
+
+          ctx.scale(2, 2);
+          // ctx.translate(100, 50);
+          ctx.rotate( gradZuRadiant(-20) );
+          // ctx.translate(-100, -50);
+          ctx.drawImage(img2, 140, 140, img2.width, img2.height);
+          ctx.scale(.5, .5);
+
+          ctx.shadowColor = 'rgba(0,0,0,0)';
+
+          ctx.strokeStyle = 'rgba(255, 150, 0, 0.5)';
+          ctx.lineWidth = 5;
+          ctx.fillStyle = 'rgba(255, 150, 0, 0.3)';
+
+          ctx.moveTo(100, 100);
+          ctx.lineTo(200, 100);
+          ctx.lineTo(150, 150);
+          ctx.closePath();
+
+          ctx.stroke();
+          ctx.fill();
+
+          ctx.beginPath();
+          ctx.arc(300, 200, 50, 0, Math.PI * 2);
+
+          ctx.stroke();
+          ctx.fill();
+        } // Ende zeichneCanvas
+    });
+
+  </script>
+  <style media="screen">
+    canvas {
+      border: 1px solid;
+      box-shadow: 0 0 5px rgba(0, 0, 0, .5);
+    }
+  </style>
+</head>
+
+<body>
+  <canvas id="meinCanvas" width="600" height="400"></canvas>
+</body>
+
+</html>

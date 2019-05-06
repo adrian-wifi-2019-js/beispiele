@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>JS Objekt-Literal und JSON</title>
+  <script>
+    // Erzeugen von Objekten und Arrays via 'new' und deren Konstruktor-Funktion...
+    //let foo = new Object();
+    //let liste = new Array();
+
+    // ...oder via Kurzschreibweise (Literal-Schreibweise)
+    let foo = {
+      vorname: 'Max',
+      nachname: 'Muster',
+      alter: 24,
+      hobbies: ['Lesen', 'Reisen', 'Sport'],
+      zeigeName: function(){
+        console.log('Mein Name ist ' + this.vorname + ' ' + this.nachname);
+      }
+    };
+
+    foo.zeigeName();
+
+    // alternatives Iterieren über ein Array via Array-Methode 'forEach()'
+    foo.hobbies.forEach( function(eintrag, index){
+        console.log('Hobby Nummer ' + index + " ist " + eintrag);
+    } );
+
+    //console.log(foo.vorname + " " + foo.nachname);
+    let liste = [];
+
+    // Im JSON-Format sind nur folgende Datentypen zulässig:
+    // String, Number, Boolean, null, Array, Object
+    // Eigenschaftsnamen müssen als Strings definiert sein und
+    // es sind nur doppelte Anführungszeichen Zulässig
+    let fooJson = JSON.stringify(foo);  // ein JSON String wird aus dem JS-Objekt erzeugt
+    console.log('JSON-String: ' + fooJson);
+
+    let neuesFoo = JSON.parse(fooJson); // ein JS-Objekt wird aus einem JSON-String gebildet
+    console.log(neuesFoo);
+
+
+  </script>
+</head>
+<body>
+
+</body>
+</html>

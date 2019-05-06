@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Zahlen addieren</title>
+  <script>
+
+    var x = 15;
+    var y = 20;
+
+    window.addEventListener('load', fensterGeladen);
+
+    function fensterGeladen() {
+      console.log('window wurde komplett geladen!');
+      var ergebnisButton = document.getElementById('buttonAusgabe');
+      ergebnisButton.addEventListener('click', zeigeErgebnis);
+    }
+
+    function zeigeErgebnis(){
+      var divAusgabe = document.getElementById('ausgabe');
+      divAusgabe.innerText = x + ' + ' + y + ' = ' +  (x + y);
+    }
+
+  </script>
+
+  <style media="screen">
+    * {
+      font-family: sans-serif;
+    }
+    div {
+      border: 1px solid;
+      background-color: lightyellow;
+      margin: .5em;
+      padding: .5em;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="ausgabe">Hier soll das Ergebnis rein</div>
+  <button type="button" id="buttonAusgabe">Zeige Ergebnis</button>
+</body>
+
+</html>

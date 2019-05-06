@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Canvas Basics</title>
+  <script>
+
+    // helpers
+
+    function gradZuRadiant(grad){
+      return grad * Math.PI / 180;
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+
+      const c = document.getElementById('meinCanvas');
+      const ctx = c.getContext('2d');
+
+      const numImgTotal = 2;
+      let numImgLoaded = 0;
+
+      const img = new Image();
+      img.onload = imgGeladen;
+      img.src = 'https://magento.consalnet.pl/media/catalog/product/1/0/10332VE_1.jpg';
+
+      const img2 = new Image();
+      img2.onload = imgGeladen;
+      img2.src = 'images/plane.png';
+
+      let ratioWidthHeight;
+
+      function imgGeladen(){
+        numImgLoaded ++;
+        if(numImgLoaded === numImgTotal){
+          ratioWidthHeight = img.height / img.width;
+          zeichneCanvas();
+        }
+      }
+
+      let posX = 140;
+      let posY = 380;
+
+      let offsetXPerSec = 10;
+      let offsetYPerSec = -50;
+
+      let lastUpdate = Date.now();
+
+      function zeichneCanvas(){
+          let now  = Date.now();
+          let delta = (now  - lastUpdate)/1000; // Wert in sec
+          lastUpdate = now;
+
+          posX += offsetXPerSec * delta;
+          posY += offsetYPerSec * delta;
+
+
+          ctx.clearRect(0, 0, c.width, c.height);
+          ctx.drawImage(img, 0, 0, c.width, c.width * ratioWidthHeight); // HG Bild
+
+          ctx.shadowBlur = 10;
+          ctx.shadowColor = 'rgba(0,0,0,0.7)';
+          ctx.shadowOffsetX = -40;
+          ctx.shadowOffsetY = 40;
+
+          ctx.drawImage(img2, posX, posY, img2.width, img2.height);
+
+          if(posY < -50)
+            posY = 380;
+
+          requestAnimationFrame(zeichneCanvas);
+        } // Ende zeichneCanvas
+
+
+        zeichneCanvas();
+    }); // Ende DOMContentLoaded
+
+
+  </script>
+  <style media="screen">
+    canvas {
+      border: 1px solid;
+      box-shadow: 0 0 5px rgba(0, 0, 0, .5);
+    }
+  </style>
+</head>
+
+<body>
+  <canvas id="meinCanvas" width="600" height="400"></canvas>
+</body>
+
+</html>

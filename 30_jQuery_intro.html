@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>jQuery DOM Navigation (Traversing) und Manipulation</title>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <script>
+    // jQuery referenziert das jQuery Core Object...
+    // jQuery(document).ready( function(ereignis){
+    //   console.log('DOMContentLoaded!');
+    // } );
+
+    // Auch '$' referenziert das jQuery Core Object,
+    // document ist das Default-BOM Objekt bei einem 'ready'-Handler (und kann weggelassen werden)...
+    // $().ready( function(ereignis){
+    //   console.log('DOMContentLoaded!');
+    // } );
+
+    // Es geht aber auch noch kürzer (empfohlene Schreibweise für document ready-Handler):
+    $( function(){
+      //console.log( $('#gibtsnicht') );
+
+      console.log("DOMContentLoaded again!");
+      console.log( $('#absatz1').text() );
+
+
+      $('#absatz1').text( "Neuer Text in Absatz 1" ); // entspricht der innerText-Eigenschaft
+      $('#absatz2').html( "<strong>Neuer</strong><br>Text" ); // entspricht der innerHTML-Eigenschaft
+
+      $('p').addClass('blau'); // entspricht classList.add()
+      $('h3:nth-of-type(1)').css('background-color', 'rgba(200, 50, 200, 0.8)'); // entspricht dem style-Atrribut des DOM-Elements
+
+      console.dir( $('p') );
+      console.dir( $('#absatz1') );
+
+      $('img[alt="Bild"]').click( function(ev){
+        // this liefert das JS DOM-Element (wie in herkömmlichen Event-Handlern)
+        console.log(this);
+
+        // die $()-Funktion verpackt es in ein jQuery-Objekt
+        $(this).attr('src', 'images/ship.png');
+      });
+
+      // entspricht: document.createElement('span');
+      $('<span>')
+        .text('Ich bin ein neuer span')
+        .css( {'color': '#cf9', 'font-size': '1.5em'} )
+        .appendTo( '#absatz3' );
+
+      // Wenn immer sinnvoll, sind jQuery-Methoden 'transparent',
+      // d.h.: sie geben jenes jQuery-Objekt zurück, auf das die
+      // Methode angewandt wurde.
+      // Dies ermöglicht das sogenannte 'Method Chaining' (s.o.)
+
+    } );
+
+
+
+  </script>
+  <style media="screen">
+    .blau {
+      background: darkblue;
+      color: lightblue;
+    }
+  </style>
+</head>
+<body>
+  <h3>jQuery DOM Navigation (Traversing) und Manipulation</h3>
+  <p id="absatz1">Default-Text Absatz 1</p>
+  <p id="absatz2">Default-Text Absatz 2</p>
+  <p id="absatz3">Default-Text Absatz 3</p>
+
+  <img src="images/plane.png" alt="Bild">
+</body>
+</html>

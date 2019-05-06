@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LocalStorage Basics</title>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <script>
+    $(function(){
+
+      function zeigeStorage(){
+        let daten = localStorage.getItem('username');
+
+        if(daten){
+          daten = JSON.parse(daten);
+          $('#ausgabe').text('Hallo ' + daten.name + '! Anzahl der Aufrufe: ' + daten.counter);
+          daten.counter ++;
+          localStorage.setItem('username', JSON.stringify(daten) );
+        } else {
+          $('#ausgabe').empty();
+        }
+      }
+
+      zeigeStorage();
+
+      $('#btn_save').on('click', function(){
+        let eingabe = $('#name').val();
+
+        if(eingabe.trim() !== ''){
+          let daten = {
+            name: eingabe,
+            counter: 1
+          }
+          // window.localStorage -> window muss nie angegeben werden
+          // Im localStorage können nur Strings gespeichert werden -> JSON.stringify()
+          localStorage.setItem('username', JSON.stringify(daten) );
+
+          zeigeStorage();
+        } else {
+          alert('Gib was ein!');
+        }
+      }); // Ende btn_save on click
+
+      $('#btn_delete').on('click', function() {
+        localStorage.removeItem('username');
+        //localStorage.clear(); // löscht das gesamte localStorage für die Domain
+        zeigeStorage();
+      });
+
+    }); // Ende ready
+  </script>
+
+  <style media="screen">
+    *{
+      font-family: sans-serif;
+      margin: .3rem;
+    }
+  </style>
+</head>
+<body>
+  <label for="name">Name:</label>
+  <input type="text" id="name" placeholder="Geben Sie einen Namen an">
+  <button type="button" id="btn_save">Speichern</button>
+  <button type="button" id="btn_delete">Löschen</button>
+
+  <div id="ausgabe"></div>
+</body>
+</html>

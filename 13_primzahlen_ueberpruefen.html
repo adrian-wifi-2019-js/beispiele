@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Primzahlen überprüfen</title>
+  <script>
+    // var startWert = 2;
+    // var endWert = 100;
+
+    // for (var i = startWert; i <= endWert; i++) {
+    //   isPrimzahl( i );
+    // }
+
+    function isPrimzahl( zahl ){
+      for (var j = 2; j < zahl; j++) {
+        if (zahl % j === 0) {
+          // console.log(i + ' ist keine Primzahl, da teilbar durch ' + j);
+          // break;
+          return false;
+        }
+
+        // letzter Schleifendurchlauf und kein break ausgeführt
+        // if (j === zahl - 1) {
+        //   console.log(zahl + ' ist eine Primzahl!');
+        //   // return true;
+        // }
+      }
+
+      return true;
+    }
+
+    window.onload = function(){
+      var btn = document.getElementById('btn_eingabe');
+
+      btn.onclick = function(){
+        var pruefZahl = document.getElementById('eingabe').value;
+        var ausgabeText;
+
+
+        if ( isPrimzahl(pruefZahl) /*=== true*/ ){
+          ausgabeText = pruefZahl + ' ist eine Primzahl';
+        } else {
+          ausgabeText = pruefZahl + ' ist KEINE Primzahl';
+        }
+
+        document.getElementById('ausgabe').innerText = ausgabeText;
+      }
+    }
+
+  </script>
+  <style media="screen">
+    div {
+      padding: 1em;
+      border: 1px solid;
+      margin-bottom: .5em;
+    }
+  </style>
+</head>
+
+<body>
+  <div>
+    <p id="ausgabe"></p>
+  </div>
+
+  <input type="text" id="eingabe" placeholder="Geben Sie einen Wert an.">
+  <button type="button" id="btn_eingabe">Zahl testen</button>
+</body>
+
+</html>

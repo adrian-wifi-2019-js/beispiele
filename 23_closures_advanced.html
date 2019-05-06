@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Globale und funktionseigene Variablen - Closures</title>
+  <script>
+
+    window.onload = function() {
+      var foo = 0;
+
+      function addButtonListener(btn, btn2, msg) {
+        var foo2 = 0;
+
+        btn.addEventListener('click',
+          function() {
+            foo2 += 1;
+            foo += 1;
+            console.log('btn/click: window.onload foo=' + foo + msg + foo2);
+          }
+        );
+
+        btn2.addEventListener('click',
+          function() {
+            foo2 += 1;
+            foo += 1;
+            console.log('btn2/click: window.onload foo=' + foo + msg + foo2);
+          }
+        );
+      }; // Ende addButtonListener
+
+      addButtonListener(document.getElementById('button1'), document.getElementById('button2'), ', b1/b2 haben foo2=');
+      addButtonListener(document.getElementById('button3'), document.getElementById('button4'), ', b3/b4 haben foo2=');
+
+    } // Ende window.onload
+  </script>
+
+
+</head>
+
+<body>
+  <button type="button" id="button1">Klick Mich 1</button>
+  <button type="button" id="button2">Klick Mich 2</button>
+  <button type="button" id="button3">Klick Mich 3</button>
+  <button type="button" id="button4">Klick Mich 4</button>
+</body>
+
+</html>

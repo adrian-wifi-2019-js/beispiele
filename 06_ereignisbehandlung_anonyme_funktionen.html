@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Event Handler und Listener mit anonymen Funktionen</title>
+  <script>
+
+    window.addEventListener (
+      'load',
+      function() {
+        var headline = document.getElementById('ueberschrift');
+        headline.innerText += ' Guten Morgen!';
+
+        var btn1 = document.getElementById('button1');
+        btn1.addEventListener('click', function() {
+          var divMain = document.getElementById('main');
+          divMain.innerText = 'Button 1 geklickt';
+        });
+
+        var btn2 = document.getElementById('button2');
+        btn2.addEventListener('click', function() {
+          var divMain = document.getElementById('main');
+          divMain.innerText = 'Button 2 geklickt';
+        });
+      }
+    );
+
+  </script>
+
+  <style media="screen">
+    * {
+      font-family: sans-serif;
+    }
+
+    div {
+      margin-bottom: .5em;
+      padding: .5em;
+      background-color: lightyellow;
+      border: 1px solid;
+      min-height: 5em;
+    }
+  </style>
+</head>
+
+<body>
+
+  <h1 id="ueberschrift">Willkommen in der ereignisreichen Welt von JavaScript!</h1>
+  <div id="main"></div>
+  <button type="button" id="button1">Zeige Inhalt 1</button>
+  <button type="button" id="button2">Zeige Inhalt 2</button>
+
+</body>
+
+</html>

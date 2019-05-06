@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TODO-Liste</title>
+  <link rel="stylesheet" href="css/jquery-ui.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <script src="js/jquery-ui.min.js"></script>
+  <script>
+    // Kurzform des DOM ready callbacks:
+    // $( function(){ .... });
+
+    // Altzernative Deklaration des DOM ready callbacks:
+    $(document).ready( function(){
+      $('#main').tabs({
+
+        activate: function(e, ui){
+
+          // console.log( ui.newPanel.attr('id') );
+          if(ui.newPanel.attr('id') !== 'ausgabe')
+            return;
+
+          $('#todoListe').empty();
+
+          let todoListe = localStorage.getItem('todoListe');
+
+          if(todoListe === null || todoListe.length === 0){
+            $('#todoListe').text('Keine Tasks gespeichert');
+            return;
+          }
+
+          todoListe = JSON.parse(todoListe); // String to JS Objekt
+
+          let table, tr, td;
+
+          table = $('<table>');
+          table.append( $('<tr><th>Task</th><th>Beschreibung</th><th>Deadline</th><th>Priorität</th></tr>') );
+
+          $.each(todoListe, function(i, task){
+            tr = $('<tr>')
+              .append( $('<td>').text(task.titel) )
+              .append( $('<td>').text(task.details) )
+              .append( $('<td>').text(task.deadline) )
+              .append( $('<td>').text(task.prio) )
+              .appendTo(table);
+          });
+
+          $('#todoListe').append(table);
+
+        }
+      }); // jQuery UI Tabs werden über das parent-Element initialisiert
+
+      $('#btn_save').on('click', function(e){
+          e.preventDefault();
+
+          let val1 = validiereEingabe('titel', 'stringNotEmpty', 'fehler');
+          let val2 = validiereEingabe('details', 'stringNotEmpty', 'fehler');
+          let val3 = validiereEingabe('deadline', 'date', 'fehler');
+          let val4 = validiereEingabe('prio', 'intGreaterZero', 'fehler');
+
+          if(val1 && val2 && val3 && val4){
+            let task = {
+              titel: $('#titel').val(),
+              details: $('#details').val(),
+              deadline: $('#deadline').val(),
+              prio: $('#prio').val()
+            };
+
+            let todoListe = localStorage.getItem('todoListe');
+            todoListe = (todoListe === null) ? [] : JSON.parse(todoListe);
+
+            todoListe.push(task);
+            localStorage.setItem( 'todoListe', JSON.stringify(todoListe) );
+
+            console.log('Task gespeichert');
+          }
+      }); // Ende btn_save click
+
+      $('#btn_delete').on('click', function(){
+        localStorage.removeItem('todoListe');
+        // localStorage.clear(); // löscht alle localStorage Items (derselben Domain)
+      });
+
+    } ); // Ende ready
+
+    function validiereEingabe(id, typ, errorCSS){
+      let isValid = false;
+      let feld = $('#' + id);
+      let wert = feld.val();
+
+      switch(typ){
+        case 'stringNotEmpty':
+          isValid = ( wert.trim() !== '' );
+          break;
+
+        case 'date':
+          let arr = wert.split('.');
+          if(arr.length !== 3)
+            break;
+
+          let date = new Date(arr[2], arr[1] - 1, arr[0]);
+          isValid = date.getDate() == arr[0] &&
+                    date.getMonth() == arr[1] - 1 &&
+                    date.getFullYear() == arr[2];
+          break;
+        case 'intGreaterZero':
+          // if( isNaN(wert) )
+          //   break;
+
+          isValid = wert > 0;
+          break;
+        default:
+          // falls kein case zutrifft...
+          throw Error('validiereEingabe: unbekannter Typ: ' + typ);
+      }
+
+      if( errorCSS ){
+        isValid ? feld.removeClass(errorCSS) : feld.addClass(errorCSS);
+
+        if(isValid === false)
+          feld.focus();
+      }
+
+      return isValid;
+    }
+
+  </script>
+  <style media="screen">
+    #eingabe label{
+      width: 160px;
+      display: inline-block;
+    }
+    input, select {
+      margin: .3em;
+      padding: .2em;
+    }
+    .fehler {
+      background: red;
+    }
+    button {
+      margin-top: .3em;
+    }
+    td {
+      padding: .3em;
+    }
+  </style>
+</head>
+<body>
+  <div id="main">
+
+    <ul>
+      <li><a href="#eingabe">Daten eingeben</a></li>
+      <li><a href="#ausgabe">Daten ausgeben</a></li>
+    </ul>
+
+    <div id="eingabe">
+        <h1>Eingabe</h1>
+        <form id="formular" action="#">
+          <label for="titel">Task</label>
+          <input type="text" id="titel" placeholder="Task Titel"><br>
+
+          <label for="details">Beschreibung</label>
+          <input type="text" id="details" placeholder="Beschreibung"><br>
+
+          <label for="deadline">Zu erledigen bis:</label>
+          <input type="text" id="deadline" placeholder="TT.MM.JJJJ"><br>
+
+          <label for="prio">Priorität:</label>
+          <select id="prio">
+            <option>Wählen Sie eine Priorität</option>
+            <option value="1">Niedrig</option>
+            <option value="2">Mittel</option>
+            <option value="3">Hoch</option>
+          </select><br>
+
+          <button type="button" id="btn_save">Task speichern</button>
+        </form>
+    </div>
+
+    <div id="ausgabe">
+        <h1>Ausgabe</h1>
+        <div id="todoListe"></div>
+        <button type="button" id="btn_delete">Liste Löschen</button>
+    </div>
+
+  </div>
+</body>
+</html>

@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pseudoklassische OOP</title>
+  <script>
+
+    function Person(vn, nn, a){
+      this.vorname = vn;
+      this.nachname = nn;
+      this.alter = a;
+
+      this.zeigeName = function(){
+        console.log(this.vorname + ' ' + this.nachname);
+      }
+    }
+
+    Person.prototype.zeigeAlter = function(){
+      console.log( 'Mein Alter ist ' + this.alter );
+    }
+
+    // Person('abc', 'Foo');
+    // console.log('window.nachname: ' + window.nachname);
+
+    let susi = new Person('Susi', 'Muster', 24);
+    let max = new Person('Max', 'Mustermann', 19);
+
+    console.log(max.__proto__);
+    console.log(Person.prototype);
+
+    console.log(max.constructor);
+
+    console.log(max.__proto__ === Person.prototype);  // true
+    console.log(max.constructor ===  Person);         // true
+    console.log(max instanceof Person);               // true
+
+    // susi.zeigeName();
+    // max.zeigeName();
+    // susi.zeigeAlter();
+
+    // console.log(susi);
+    // console.log(max);
+
+  </script>
+</head>
+<body>
+
+</body>
+</html>

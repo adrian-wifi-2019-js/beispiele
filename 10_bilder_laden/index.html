@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bilder Laden</title>
+  <script>
+
+    window.onload = function(){
+
+      var anzahlBilder = 5;
+      var bildNummerAktuell = 1;
+      var weiterBtn = document.getElementById('btnWeiter');
+      var bild = document.getElementById('foto');
+      var details = document.getElementById('bildUrl');
+
+      weiterBtn.onclick = function(){
+        if(bildNummerAktuell < anzahlBilder)
+          bildNummerAktuell ++;
+        else
+          bildNummerAktuell = 1;
+
+        bild.src = 'images/0' + bildNummerAktuell + '.jpg';
+        details.innerText = bild.src;
+      }
+
+
+    } // Ende window.onload
+
+  </script>
+  <style media="screen">
+    #foto {
+      max-width: 500px;
+    }
+  </style>
+</head>
+<body>
+  <img src="images/01.jpg" id="foto" alt="Bild"><br>
+  <span id='bildUrl'></span>
+  <br>
+  <button type="button" id="btnWeiter">Weiter >></button>
+</body>
+</html>

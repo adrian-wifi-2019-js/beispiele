@@ -1,0 +1,9 @@
+.main {
+  padding: 1em;
+  border: 1px solid;
+  margin-bottom: .5em;
+}
+
+.fehler {
+  border-color: #c66;
+}

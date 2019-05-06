@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Canvas - Simple Text Animation</title>
+  <script>
+
+    window.onload = function(){
+      const c = document.getElementById('meinCanvas');
+      const ctx = c.getContext('2d');
+
+      ctx.strokeStyle = '#993333';
+      ctx.lineWidth = '5px';
+
+      ctx.fillStyle = '#00ff99';
+
+      ctx.shadowBlur = 10;
+      ctx.shadowColor = 'black';
+      ctx.shadowOffsetX = 5;
+      ctx.shadowOffsetY = 5;
+
+      ctx.font = '30px Arial Black';
+
+      let posX = 1;
+      let posY = 1;
+
+      let offsetPerSec = 100;
+      let lastUpdate = Date.now();
+
+      function zeichneText(){
+        let now  = Date.now();
+        let delta = (now  - lastUpdate)/1000; // Wert in sec
+        lastUpdate = now;
+
+        // console.log('delta: ' + delta);
+
+        posX += offsetPerSec * delta;
+        posY += offsetPerSec * delta;
+
+        ctx.clearRect(0, 0, 600, 400);
+        ctx.fillText('Mahlzeit!', posX, posY);
+        ctx.strokeText('Mahlzeit!', posX, posY);
+
+        if(posY >= 400 || posY <= 0)
+          offsetPerSec *= -1;
+
+        //if(posX < 600 || posY < 400)
+          requestAnimationFrame(zeichneText);
+        //else
+          //console.log('Animation zu Ende, kein weiterer Aufruf von requestAnimationFrame');
+      }
+
+      // setInterval(zeichneText, 20);
+      zeichneText();
+    }
+  </script>
+  <style media="screen">
+    canvas {
+      border: 1px solid;
+      box-shadow: 0 0 5px rgba(0,0,0,.5);
+    }
+  </style>
+</head>
+<body>
+  <canvas id="meinCanvas" width="600" height="400"></canvas>
+</body>
+</html>

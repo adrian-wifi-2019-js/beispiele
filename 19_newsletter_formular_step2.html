@@ -1,0 +1,219 @@
+<!doctype html>
+<html>
+<head>
+	<title>Javascript Basics</title>
+	<meta charset="utf-8">
+
+	<script>
+
+		// Hilfsfunktion für schlanken Quellcode und Überprüfung auf Vorhandensein des Elements
+		function _e( id ){
+			var e = document.getElementById(id);
+			if( e === null )
+				console.warn('function _e: Es konnte kein DOM Element mit der id "' + id + '" gefunden werden.');
+			return e;
+		}
+
+		function addKlasse(id, klasse){
+			if(typeof id === 'string')
+				id = [ id ];
+
+			for(var i = 0; i < id.length; i++){
+				_e( id[ i ] ).classList.add( klasse );
+			}
+		}
+
+		function removeKlasse(id, klasse){
+			if(typeof id === 'string')
+				id = [ id ];
+
+			for(var i = 0; i < id.length; i++){
+				_e( id[ i ] ).classList.remove( klasse );
+			}
+		}
+
+		function bildeSelects(){
+
+			var tagSelect = _e( 'f_geb_tag' );
+			var monatSelect = _e( 'f_geb_monat' );
+			var jahrSelect = _e( 'f_geb_jahr' );
+
+			var optionenTage = '';
+			var i;
+
+			for(i = 1; i <= 31; i++){
+				optionenTage += '<option value="' + i + '">' + i + '</option>';
+			}
+
+			tagSelect.innerHTML += optionenTage;
+
+			var optionenMonate = '';
+
+				var monatsNamen = [
+				'Jänner', 'Februar', 'März', 'April',
+				'Mai', 'Juni', 'Juli', 'August',
+				'September', 'Oktober', 'November', 'Dezember'
+			];
+
+			for(i = 0; i < monatsNamen.length; i++){
+				optionenMonate += '<option value="' + i + '">' + monatsNamen[i] + '</option>';
+			}
+
+			monatSelect.innerHTML += optionenMonate;
+
+			var optionenJahre = '';
+			for(i = 1900; i < 2020; i++){
+				optionenJahre += '<option value="' + i + '">' + i + '</option>';
+			}
+			jahrSelect.innerHTML += optionenJahre;
+		}
+
+		document.addEventListener('DOMContentLoaded', function(){
+
+			bildeSelects();
+
+			_e('meinForm').onsubmit = function(e){
+
+				e.preventDefault();
+
+				// Reset der Form-Elemente: allen Elementen wird die CSS-Klasse 'error' wieder entzogen
+				removeKlasse( 	[
+											'f_email', 'label_anrede_1', 'label_anrede_2',
+											'f_vorname', 'f_nachname', 'f_geb_tag',
+											'f_geb_monat', 'f_geb_jahr', 'label_datenschutz'
+										],
+										'error'
+									);
+
+				// Validierung E-Mail
+				if( _e('f_email').value.indexOf('@') === -1 || _e('f_email').value.length < 7)	{
+					addKlasse( 'f_email', 'error' );
+				}
+
+				// Validierung Anrede (Radio Buttons)
+				var radios = document.querySelectorAll('[name="rb_anrede"]');
+				var ok = false;
+
+				for(var i = 0; i < radios.length; i++){
+					if(radios[i].checked /* === true */ ){
+						ok = true;
+						break;
+					}
+				}
+
+				if(!ok)
+					addKlasse(['label_anrede_1', 'label_anrede_2'], 'error');
+
+				// Validierung Namen
+				if(_e('f_vorname').value.length < 2){
+					addKlasse('f_vorname', 'error');
+				}
+
+				if(_e('f_nachname').value.length < 2){
+					addKlasse('f_nachname', 'error');
+				}
+
+				// Validierung Datenschutz
+				if( !_e('f_datenschutz').checked ){
+					addKlasse('label_datenschutz', 'error');
+				}
+
+				// Validierung Datum
+				var jahr = _e('f_geb_jahr').value;
+				var monat = _e('f_geb_monat').value;
+				var tag = _e('f_geb_tag').value;
+
+				var datum = new Date(jahr, monat, tag);
+
+				if(jahr != datum.getFullYear() ||
+					 monat != datum.getMonth() ||
+					 tag != datum.getDate()
+				 ){
+						addKlasse( ['f_geb_jahr', 'f_geb_monat', 'f_geb_tag'], 'error' );
+				 }
+
+			}
+
+			// Focus / Blur
+
+
+			// Alle Inputs...
+
+			var inputs = document.getElementsByTagName('input');
+			var selects = document.getElementsByTagName('select');
+
+			addEreignisProzedur(inputs);
+			addEreignisProzedur(selects);
+
+			function addEreignisProzedur(elemente){
+				for(var i = 0; i < elemente.length; i++){
+					elemente[i].onfocus = fokus;
+					elemente[i].onblur = fokusWeg;
+				}
+			}
+
+			function fokus(ereignis){
+				this.classList.add('fokus');
+				// addKlasse(this.id, 'fokus');
+			}
+
+			function fokusWeg (){
+				this.classList.remove('fokus');
+				// removeKlasse(this.id, 'fokus');
+			}
+
+			var standardTextMail = 'Deine E-Mail';
+
+			// ein 'onfocus'-Event Handler würde die vorhergehende Zuweisung der Funtion 'fokus()' überschreiben...
+			// Deshalb: addEventListener('focus', ...)
+			_e('f_email').addEventListener('focus', function(){
+				if(this.value === standardTextMail)
+					this.value = '';
+			});
+
+			_e('f_email').addEventListener('blur', function(){
+				if(this.value === '')
+					this.value = standardTextMail;
+			});
+
+		}); // Ende DOMContentLoaded
+
+	</script>
+
+	<style>
+	body, input, select, button { font:20px Arial; }
+	label { width:150px; display:inline-block; }
+	.check label, .radios label { width:auto; }
+	.radios { padding-left:160px; }
+	div { border:solid #ccc; border-width:1px 0; padding:10px; }
+	button { width:200px; line-height:2; margin:20px;}
+	.error { border:1px solid red; }
+	.check .error, .radios .error { border:none; color:red; }
+	.fokus {
+		background: yellow;
+	}
+	</style>
+</head>
+<body>
+	<h1>Newsletter Anmeldung</h1>
+
+	<form id="meinForm" action="?" autocomplete="on">
+		<div><label>E-Mail</label><input type="text" id="f_email" value="Deine E-Mail"></div>
+		<div class="radios">
+			<label id="label_anrede_1">Herr <input type="radio" name="rb_anrede" id="f_anrede_h" value="herr"></label>
+			<label id="label_anrede_2">Frau <input type="radio" name="rb_anrede" id="f_anrede_f" value="frau"></label>
+		</div>
+		<div><label for="f_vorname">Vorname</label><input type="text" id="f_vorname"></div>
+		<div><label>Nachname</label><input type="text" id="f_nachname"></div>
+	  <div>
+				<label>Geburtsdatum</label>
+				<select id="f_geb_tag"><option>Tag</option></select>
+				<select id="f_geb_monat"><option>Monat</option></select>
+				<select id="f_geb_jahr"><option>Jahr</option></select>
+		</div>
+		<div class="check"><label id="label_datenschutz"><input type="checkbox" id="f_datenschutz" value="1"> Datenschutz akzeptiert.</label></div>
+
+		<button id="btn_submit">Anmelden</button>
+	</form>
+</body>
+</html>

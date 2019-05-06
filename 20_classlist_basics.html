@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>classList Basics</title>
+
+  <script>
+      window.onload = function(){
+        document.getElementById('feld1').onfocus = fokus;
+        document.getElementById('feld2').onfocus = fokus;
+
+        document.getElementById('feld1').onblur = fokusWeg;
+        document.getElementById('feld2').onblur = fokusWeg;
+
+        function fokus(ereignis){
+          // console.log(ereignis.currentTarget);
+          // ereignis.currentTarget.classList.add('fokus');
+
+          console.log(this);
+          console.log('this === ereignis.currentTarget: ' + (this === ereignis.currentTarget) );
+          this.classList.add('fokus');
+          // this.className = 'fokus';
+        }
+
+        function fokusWeg (){
+          this.classList.remove('fokus');
+        }
+
+        // classList Dokumentation:
+        // https://www.w3schools.com/jsref/prop_element_classlist.asp
+      }
+  </script>
+
+  <style media="screen">
+    .eingabe {
+      border: 2px solid;
+      background: lightblue;
+    }
+    .fokus {
+      background: yellow;
+    }
+  </style>
+
+</head>
+<body>
+
+  <input type="text" id="feld1" class="eingabe" placeholder="Feld 1">
+  <input type="text" id="feld2" class="eingabe" placeholder="Feld 2">
+
+</body>
+</html>

@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Setters und Getters in der pseudoklassischen OOP</title>
+  <script>
+    function Person(n, a){
+      // this.name = n;
+      Object.defineProperty(this, 'name', {value: n, writeable: false});
+      this.alter = a;
+
+      // die Accessoren zu 'adresse' (getter/setter) werden den
+      // über die Konstruktor-Funktion erzeugten Objektzen zugewiesen
+      Object.defineProperty(this,
+        'adresse',
+        {
+          set: function(a){
+            if(a === '')
+              throw Error('Leere Adresse nicht zulässig')
+
+            this._adresse = a;
+          },
+          get: function(){
+            return this._adresse;
+          }
+        }
+      );
+    }
+
+    // Accessoren zu alter (getter/setter) werden
+    // dem Prototype-Objekt der Konstruktor-Funktion zugewiesen
+    Object.defineProperty(Person.prototype,
+      'alter',
+      {
+        set: function(a){
+          if(isNaN(a) || a < 0)
+            throw Error('Alter ' + a + ' nicht zulässig')
+
+          this._alter = a;
+        },
+        get: function(){
+          return this._alter;
+        }
+      }
+    );
+
+    let max = new Person('Max Muster', 100);
+    max.name = 'Andrerer Name'; // wirkungslos, da Eigenschaft writeable false zugewiesen hat
+
+    console.log(max.name);
+    console.log(max.alter);
+    console.log(max);
+
+  </script>
+</head>
+<body>
+
+</body>
+</html>

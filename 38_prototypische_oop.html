@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Prototypische OOP</title>
+  <script>
+
+    // datum ist eine Instanz von Date
+    let datum = new Date();
+    datum.getFullYear(); // Methode des Date.prototype, also der Instanz
+
+    let jetzt = Date.now(); // statische Methode
+
+    // let person = new Object();
+
+    // Die Literal-Schreibweise '{}' erzeugt gleichfalls ein Objekt wie 'new Object()'
+    let person = {
+      vorname: 'Unbekannter Vorname',
+      nachname: 'Unbekannter Nachname',
+      typ: 'person',
+      zeigeName: function(){
+        console.log('Mein Name ist ' + this.vorname + ' ' + this.nachname);
+      },
+      zeigeObjekt: function(){
+        console.log(this);
+      }
+    };
+
+    let susi = Object.create(person, {
+      geschlecht: {value: 'female'},
+      alter: {value: 25}
+    });
+
+    console.log('susi.vorname: ' + susi.vorname);
+    console.log(susi.__proto__);
+
+    susi.vorname = 'Susi';
+    susi.nachname = 'Muster';
+
+    person.zeigeName();
+    susi.zeigeName();
+
+    person.vorname = 'Anonym';
+
+    person.zeigeObjekt();
+    susi.zeigeObjekt();
+
+    // Nachträgliche Änderungen des Prototypes haben direkte Auswirkung auf das erbende Objekt
+    person.typ = 'Mensch';
+    console.log('susi.typ: ' + susi.typ);
+
+  </script>
+</head>
+<body>
+
+</body>
+</html>

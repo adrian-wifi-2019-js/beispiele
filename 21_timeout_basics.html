@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Timeout Basics</title>
+  <script>
+      window.onload = function(){
+        var anzeigeDauer = 10000; // in ms
+        var intervalId;
+
+        document.getElementById('btn').addEventListener('click', function(){
+          document.getElementById('hinweis').classList.remove('unsichtbar');
+          setTimeout(versteckeHinweis, anzeigeDauer); // in ms
+
+          // Die Funktion 'zeigeTimer' wird erst nach dem Ablauf des ersten Intervalls zum ersten Mal ausgeführt
+          intervalId = setInterval(zeigeTimer, 1000); // in ms
+
+          // Erstmaliger sofortiger Aufruf der Funktion 'zeigeTimer'
+          // zeigeTimer();
+        });
+
+        function versteckeHinweis(){
+          document.getElementById('hinweis').classList.add('unsichtbar');
+          clearInterval(intervalId);
+        }
+
+        function zeigeTimer(){
+          document.getElementById('hinweis').innerText = new Date().toLocaleString();
+        }
+
+      } // Ende window.onload
+  </script>
+
+  <style media="screen">
+    body {
+      font-size: 1.25rem;
+      font-family: sans-serif;
+    }
+    .unsichtbar {
+      display: none;
+    }
+    div {
+      padding: .5em;
+      border: 1px solid;
+      background: lightyellow;
+      width: 300px;
+      height: 200px;
+      margin-top: .5em;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Hinweis für eine Zeitdauer anzeigen</h1>
+  <button type="button" id="btn">Zeige Hinweis</button>
+  <div class="unsichtbar" id="hinweis">Ich bin Dein Hinweis!</div>
+
+</body>
+</html>
