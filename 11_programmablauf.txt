@@ -1,4 +1,4 @@
-Aufgabe: Primzahlen von 2-100 ermitteln:
+Aufgabe: Primzahlen von 2-100 ermitteln: 
 - Start- und Endwert festlegen
 - Überprüfe alle Zahlen von Start- bis Endwert
   - (, ob sie durch keine andere Zahl als 1 und sich selbst teilbar sind)
